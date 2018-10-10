@@ -14,11 +14,11 @@ app = Flask(__name__)
 app.config.from_object(__name__) 
 
 # MYSQL CONFIGURATIONS
-app.config["MYSQL_DATABASE_HOST"]       = "localhost"
-app.config["MYSQL_DATABASE_PORT"]       = 3306
-app.config["MYSQL_DATABASE_DB"]         = "safety"
-app.config["MYSQL_DATABASE_USER"]       = "root"
-app.config["MYSQL_DATABASE_PASSWORD"]   = ""
+app.config["MYSQL_DATABASE_HOST"]       = "mysql942.umbler.com"
+app.config["MYSQL_DATABASE_PORT"]       = 41890
+app.config["MYSQL_DATABASE_DB"]         = "safetydatabase"
+app.config["MYSQL_DATABASE_USER"]       = "safetydatabase"
+app.config["MYSQL_DATABASE_PASSWORD"]   = "safetydatabasecc"
 
 # INSTANCE MYSQL
 mysql = MySQL(cursorclass=DictCursor)
