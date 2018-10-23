@@ -180,6 +180,20 @@ def login():
             return jsonify({ "message" : "Error in Operation" })
     return jsonify({ "message" : "Home Aplication Safety" })
 
+# SEARCH USER
+@app.route("/users/<string:users_id>", methods=["GET"])
+@requires_auth
+def search_users_detalis(users_id):
+    if request.method == "GET":
+        try:
+            conn    = mysql.connect()
+            curs    = conn.cursor()
+            curs.execute("select id, name, email, password, token, arduino, date_format(modernize, '%%d/%%m/%%Y %%H:%%i:%%s') as modernize from users where users_id = %s", users_id)
+            return jsonify(curs.fetchall())
+        except:
+            return jsonify({ "message" : "Error in Operation" })
+    return jsonify({ "message" : "Home Aplication Safety" })
+
 # FUNÇÃO QUE É EXECUTADA QUANDO UMA PÁGINA NÃO É ENCONTRADA
 @app.errorhandler(404)
 def not_found(e):
