@@ -143,10 +143,19 @@ def delete_user():
 def create_log():
     if request.method == "POST" and request.form:
         try:
+
             conn    = mysql.connect()
             curs    = conn.cursor()
-            curs.execute("insert into logs (users_id, arduino) values( %s, %s )", (request.form.get("users_id"), request.form.get("arduino")))
+
+            curs.execute("select id, ifnull(token,'0') as token , arduino from users where arduino = %s", request.form.get("arduino"))
+            respon  = curs.fetchall()
             conn.commit()
+
+            if respon and respon[0]["token"] != 0:
+
+                curs.execute("insert into logs (users_id, arduino) values( %s, %s )", (respon[0]["id"], request.form.get("arduino")))
+                conn.commit()
+
             return jsonify({ "message" : "Create Logs Sucess" })
         except:
             return jsonify({ "message" : "Error in Operation" })
@@ -188,8 +197,29 @@ def search_users_detalis(users_id):
         try:
             conn    = mysql.connect()
             curs    = conn.cursor()
-            curs.execute("select id, name, email, password, token, arduino, date_format(modernize, '%%d/%%m/%%Y %%H:%%i:%%s') as modernize from users where users_id = %s", users_id)
+            curs.execute("select id, name, email, password, token, arduino, date_format(modernize, '%%d/%%m/%%Y %%H:%%i:%%s') as modernize from users where id = %s", users_id)
             return jsonify(curs.fetchall())
+        except:
+            return jsonify({ "message" : "Error in Operation" })
+    return jsonify({ "message" : "Home Aplication Safety" })
+
+# ACTIVE DETECTION
+@app.route("/flag", methods=["PUT"])
+@requires_auth
+def update_flag():
+    if request.method == "PUT" and request.form:
+        try:
+            conn    = mysql.connect()
+            curs    = conn.cursor()
+            curs.execute(
+                "update users set token = %s where id = %s", 
+                (
+                    request.form.get("token"),
+                    request.form.get("id"),
+                )
+            )
+            conn.commit()
+            return jsonify({ "message" : "Update Flag Sucess" })
         except:
             return jsonify({ "message" : "Error in Operation" })
     return jsonify({ "message" : "Home Aplication Safety" })
