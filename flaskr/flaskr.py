@@ -151,7 +151,7 @@ def create_log():
             respon  = curs.fetchall()
             conn.commit()
 
-            if respon and respon[0]["token"] != 0:
+            if respon and respon[0]["token"] != '1':
 
                 curs.execute("insert into logs (users_id, arduino) values( %s, %s )", (respon[0]["id"], request.form.get("arduino")))
                 conn.commit()
