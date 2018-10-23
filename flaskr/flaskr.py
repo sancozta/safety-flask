@@ -143,19 +143,14 @@ def delete_user():
 def create_log():
     if request.method == "POST" and request.form:
         try:
-
             conn    = mysql.connect()
             curs    = conn.cursor()
-
             curs.execute("select id, ifnull(token,'0') as token , arduino from users where arduino = %s", request.form.get("arduino"))
             respon  = curs.fetchall()
             conn.commit()
-
             if respon and respon[0]["token"] != '1':
-
                 curs.execute("insert into logs (users_id, arduino) values( %s, %s )", (respon[0]["id"], request.form.get("arduino")))
                 conn.commit()
-
             return jsonify({ "message" : "Create Logs Sucess" })
         except:
             return jsonify({ "message" : "Error in Operation" })
